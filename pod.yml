@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rust-battle
+spec:
+  containers:
+    - name: battle
+      image: shou1013/rust-battle:latest
+      imagePullPolicy: Always
+  restartPolicy: Never

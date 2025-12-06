@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: rust-battle-job
+spec:
+  parallelism: 3      # 同時に実行する Pod 数
+  completions: 3      # 合計で何回実行するか
+  backoffLimit: 0     # 失敗時に再実行しない
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: battle
+          image: shou1013/rust-battle:latest
+          imagePullPolicy: Always
