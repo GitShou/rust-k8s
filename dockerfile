@@ -2,12 +2,12 @@
 FROM rust:1.82-bullseye AS builder
 
 WORKDIR /app
-
-# 依存関係のキャッシュを効かせるために先にCargo.*だけコピー
 COPY Cargo.toml Cargo.lock ./
-RUN mkdir src && echo "fn main() {}" > src/main.rs
-RUN cargo build --release
-RUN rm -rf src
+
+# # 依存関係のキャッシュを効かせるために先にCargo.*だけコピー
+# RUN mkdir src && echo "fn main() {}" > src/main.rs
+# RUN cargo build --release
+# RUN rm -rf src
 
 # 本物のソースをコピーしてビルド
 COPY src ./src
