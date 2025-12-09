@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: battle-server
+spec:
+  replicas: 2  # とりあえず2つ
+  selector:
+    matchLabels:
+      app: battle-server
+  template:
+    metadata:
+      labels:
+        app: battle-server
+    spec:
+      containers:
+        - name: battle-server
+          image: rust-k8s-server:v1        # ← さっきのイメージ名
+          imagePullPolicy: IfNotPresent    # kind のローカルイメージを使わせる
+          ports:
+            - containerPort: 3000

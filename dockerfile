@@ -22,10 +22,10 @@ RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/
 WORKDIR /app
 
 # Rustバイナリをコピー（バイナリ名はCargo.tomlのpackage.name）
-COPY --from=builder /app/target/release/battle_game /app/battle_game
+COPY --from=builder /app/target/release/battle_server /app/battle_server
 
 # 非rootユーザで動かしたい場合
 RUN useradd -m appuser
 USER appuser
 
-CMD ["/app/battle_game"]
+CMD ["/app/battle_server"]
