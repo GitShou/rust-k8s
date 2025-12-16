@@ -208,7 +208,7 @@ impl eframe::App for AppState {
 
 fn main() -> eframe::Result<()> {
     let options = eframe::NativeOptions {
-        viewport: egui::ViewportBuilder::default().with_inner_size([520.0, 260.0]),
+        viewport: egui::ViewportBuilder::default().with_inner_size([520.0, 350.0]),
         ..Default::default()
     };
     eframe::run_native(

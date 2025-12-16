@@ -1,20 +1,20 @@
-use axum::{routing::post, extract::State, Json, Router};
+use axum::{extract::State, routing::post, Json, Router};
 use rand::Rng;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::net::SocketAddr;
 use std::sync::Arc;
 use std::time::Duration;
-use tokio::sync::{Mutex, oneshot};
+use tokio::sync::{oneshot, Mutex};
 use tokio::time::{sleep_until, Instant};
-use std::collections::HashMap;
 
 // ===== リクエスト / レスポンス =====
 
 #[derive(Deserialize)]
 struct JoinRequest {
     name: String,
-    hp:i32,
-    atk:i32
+    hp: i32,
+    atk: i32,
 }
 
 #[derive(Serialize)]
@@ -156,6 +156,8 @@ async fn join_handler(
             is_client: true,
         };
 
+        println!("{}がマッチに参加しました", character.name);
+
         match &mut state.lobby {
             Some(lobby) => {
                 lobby.players.push(PlayerEntry { character, tx });
@@ -205,11 +207,7 @@ async fn finalize_match(shared: Shared) {
 
     let mut rng = rand::thread_rng();
 
-    let mut all_chars: Vec<Character> = lobby
-        .players
-        .iter()
-        .map(|p| p.character.clone())
-        .collect();
+    let mut all_chars: Vec<Character> = lobby.players.iter().map(|p| p.character.clone()).collect();
 
     while all_chars.len() < 100 {
         let id = all_chars.len();
