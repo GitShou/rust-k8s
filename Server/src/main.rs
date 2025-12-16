@@ -58,8 +58,6 @@ struct SharedState {
 
 type Shared = Arc<Mutex<SharedState>>;
 
-// ===== バトルロジック =====
-
 fn two_mut<T>(slice: &mut [T], i: usize, j: usize) -> (&mut T, &mut T) {
     assert!(i != j);
 
