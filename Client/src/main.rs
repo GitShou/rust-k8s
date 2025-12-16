@@ -5,6 +5,8 @@ use std::sync::mpsc;
 #[derive(Debug, Serialize)]
 struct JoinRequest {
     name: String,
+    hp: i32,
+    atk: i32,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -26,9 +28,11 @@ struct AppState {
     server_url: String,
     player_name: String,
 
+    hp: i32,
+    atk: i32,
+
     status: String,
     waiting: bool,
-
     last_result: Option<JoinResponse>,
 
     rx: mpsc::Receiver<ClientEvent>,
@@ -37,10 +41,21 @@ struct AppState {
 
 impl Default for AppState {
     fn default() -> Self {
+        use rand::Rng;
+
         let (tx, rx) = mpsc::channel();
+        let mut rng = rand::thread_rng();
+
+        let hp = rng.gen_range(80..120);
+        let atk = rng.gen_range(5..20);
+
         Self {
             server_url: "http://127.0.0.1:3000".to_string(),
             player_name: "Shogo_A".to_string(),
+
+            hp,
+            atk,
+
             status: "Idle".to_string(),
             waiting: false,
             last_result: None,
@@ -66,7 +81,9 @@ impl AppState {
         self.waiting = true;
         self.last_result = None;
         self.status = "Waiting... (POST /join)".to_string();
-
+        
+        let hp = self.hp;
+        let atk = self.atk;
         let tx = self.tx.clone();
 
         std::thread::spawn(move || {
@@ -76,7 +93,11 @@ impl AppState {
             let client = reqwest::blocking::Client::new();
             let url = format!("{}/join", server_url);
 
-            let req = JoinRequest { name };
+            let req = JoinRequest {
+                name,
+                hp: hp,
+                atk: atk,
+            };
 
             let resp = client.post(url).json(&req).send();
 
@@ -145,6 +166,11 @@ impl eframe::App for AppState {
                 ui.label("Name:");
                 ui.text_edit_singleline(&mut self.player_name);
             });
+            
+            ui.separator();
+            ui.label("Character Status:");
+            ui.monospace(format!("HP  : {}", self.hp));
+            ui.monospace(format!("ATK : {}", self.atk));
 
             ui.add_space(8.0);
 

@@ -13,6 +13,8 @@ use std::collections::HashMap;
 #[derive(Deserialize)]
 struct JoinRequest {
     name: String,
+    hp:i32,
+    atk:i32
 }
 
 #[derive(Serialize)]
@@ -148,8 +150,8 @@ async fn join_handler(
 
         let character = Character {
             name: req.name.clone(),
-            hp: 100,
-            atk: 20,
+            hp: req.hp.clone(),
+            atk: req.atk.clone(),
             is_alive: true,
             is_client: true,
         };

@@ -444,6 +444,7 @@ version = "0.1.0"
 dependencies = [
  "eframe",
  "egui",
+ "rand 0.8.5",
  "reqwest",
  "serde",
  "serde_json",
