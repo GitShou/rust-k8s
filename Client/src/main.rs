@@ -71,7 +71,19 @@ impl AppState {
             return;
         }
 
-        let server_url = self.server_url.trim_end_matches('/').to_string();
+        let mut server_url = self.server_url.trim().trim_end_matches('/').to_string();
+        if server_url.is_empty() {
+            self.status = "Server URL is empty".to_string();
+            return;
+        }
+        if !server_url.starts_with("http://") && !server_url.starts_with("https://") {
+            server_url = format!("http://{server_url}");
+        }
+        if let Err(e) = reqwest::Url::parse(&server_url) {
+            self.status = format!("Invalid Server URL: {}", e);
+            return;
+        }
+
         let name = self.player_name.trim().to_string();
         if name.is_empty() {
             self.status = "Name is empty".to_string();
